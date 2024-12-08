@@ -9,10 +9,23 @@ screen = pygame.display.set_mode((screen_width,screen_height))
 pygame.display.set_caption('Crack The Code')
 
 
-status = 'main'
-
 #code for the start and background image
 background_image = pygame.image.load('background_image.jpg')
+
+images = [
+    pygame.image.load('Background layers\\Layer_0011_0.png').convert_alpha(),
+    pygame.image.load('Background layers\\Layer_0010_1.png').convert_alpha(),
+    pygame.image.load('Background layers\\Layer_0009_2.png').convert_alpha(),
+    pygame.image.load('Background layers\\Layer_0008_3.png').convert_alpha(),
+    pygame.image.load('Background layers\\Layer_0007_Lights.png').convert_alpha(),
+    pygame.image.load('Background layers\\Layer_0006_4.png').convert_alpha(),
+    pygame.image.load('Background layers\\Layer_0005_5.png').convert_alpha(),
+    pygame.image.load('Background layers\\Layer_0004_Lights.png').convert_alpha(),
+    pygame.image.load('Background layers\\Layer_0003_6.png').convert_alpha(),
+    pygame.image.load('Background layers\\Layer_0002_7.png').convert_alpha(),
+    pygame.image.load('Background layers\\Layer_0001_8.png').convert_alpha(),
+    pygame.image.load('Background layers\\Layer_0000_9.png').convert_alpha()
+]
 
 
 #loading button
@@ -28,5 +41,5 @@ start_button = logic.Button(
 )
 
 #calling menu function
-logic.menu_screen(screen,background_image,start_button)
+logic.menu_screen(screen,images,start_button)
 

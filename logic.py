@@ -36,11 +36,26 @@ class Button:
             self.clicked = False
         return action
 
-def bg(surface,image):
+def bg(surface,backgrounds):
+    #draw them into screen
+    for image in backgrounds:
+        surface.blit(backgrounds[0], (0,0))
+        surface.blit(backgrounds[1], (0,0))
+        surface.blit(backgrounds[2], (0,0))
+        surface.blit(backgrounds[3], (0,0))
+        surface.blit(backgrounds[4], (0,0))
+        surface.blit(backgrounds[5], (0,0))
+        surface.blit(backgrounds[6], (0,0))
+        surface.blit(backgrounds[7], (0,0))
+        surface.blit(backgrounds[8], (0,0))
+        surface.blit(backgrounds[9], (0,0))
+        surface.blit(backgrounds[10], (0,0))
+        surface.blit(backgrounds[11], (0,0))
+
+def game(surface):
     pass
 
-
-def menu_screen(surface,image,button):
+def menu_screen(surface,images,button):
     run = True
     button_clicked = False
 
@@ -50,7 +65,7 @@ def menu_screen(surface,image,button):
 
     # menu game loop
     while run:
-        surface.blit(image, (0, 0))
+        bg(surface,images)
 
         if not button_clicked:
             surface.blit(title, (surface.get_width() // 2 - title.get_width() // 2, 50))
@@ -66,10 +81,18 @@ def menu_screen(surface,image,button):
             info_text_press_s = text_font.render('Press space to continue', True , (255,225,225))
             surface.blit(info_text_press_s, (250 - info_text_press_s.get_width() // 2, 250))
 
+            #check if space is clicked in second screen
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+            elif button_clicked and event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    print('info screen')
+                    #transition_screen(surface,images)
 
         pygame.display.update()
 
     pygame.quit()
+
+def transition_screen(surface,images):
+    bg(surface,images)
