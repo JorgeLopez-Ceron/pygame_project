@@ -1,5 +1,4 @@
 #add here any classes from the main
-
 import pygame
 
 text_font = pygame.font.Font('GemunuLibre-VariableFont_wght.ttf', 40)
@@ -36,24 +35,30 @@ class Button:
             self.clicked = False
         return action
 
+def draw_text_box(surface, x, y, box_length, box_width, box_color):
+    pygame.draw.rect(surface, box_color, (x, y, box_length,box_width))
+
 def bg(surface,backgrounds):
     #draw them into screen
     for image in backgrounds:
-        surface.blit(backgrounds[0], (0,0))
-        surface.blit(backgrounds[1], (0,0))
-        surface.blit(backgrounds[2], (0,0))
-        surface.blit(backgrounds[3], (0,0))
-        surface.blit(backgrounds[4], (0,0))
-        surface.blit(backgrounds[5], (0,0))
-        surface.blit(backgrounds[6], (0,0))
-        surface.blit(backgrounds[7], (0,0))
-        surface.blit(backgrounds[8], (0,0))
-        surface.blit(backgrounds[9], (0,0))
-        surface.blit(backgrounds[10], (0,0))
-        surface.blit(backgrounds[11], (0,0))
+        surface.blit(image, (0,0))
 
-def game(surface):
-    pass
+def game(surface,images,button):
+    status = 'main_menu'
+
+    while True:
+        if status == 'main_menu':
+            status = menu_screen(surface,images,button)
+        elif status == 'transition_screen':
+            status = transition_screen(surface,images)
+        elif status == 'first_choice':
+            status = first_choice(surface,images)
+        elif status == 'done':
+            print('done')
+
+        pygame.display.update()
+
+
 
 def menu_screen(surface,images,button):
     run = True
@@ -73,7 +78,8 @@ def menu_screen(surface,images,button):
                 button_clicked = True
 
         if button_clicked:
-            #here we can call function to change screen and text
+            #put this onto own screen so that background can reset easier
+            #return 'info_screen'
             info_text_pt1 = text_font.render('Find the letters to create the code' ,True,(255,225,225))
             surface.blit(info_text_pt1, (250 - info_text_pt1.get_width() // 2, 100))
             info_text_p2 = text_font.render('to return to your world!',True , (255,225,225))
@@ -87,12 +93,55 @@ def menu_screen(surface,images,button):
                 run = False
             elif button_clicked and event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    print('info screen')
-                    #transition_screen(surface,images)
+                    status = 'transition_screen'
+                    return status
 
         pygame.display.update()
-
     pygame.quit()
 
+def info_screen(screen,images):
+    pass
+
 def transition_screen(surface,images):
-    bg(surface,images)
+    run = True
+
+    while run:
+
+        bg(surface,images)
+        test = text_font.render('test text', True, (255,255,255))
+        surface.blit(test, (250 - test.get_width() // 2, 100))
+
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    status = 'first_choice'
+                    return status
+
+            if event.type == pygame.QUIT:
+                run = False
+
+        pygame.display.update()
+    pygame.quit()
+
+def first_choice(surface,images):
+    run = True
+    button_yes = False
+    button_no = False
+
+    while run:
+        bg(surface, images)
+        draw_text_box(surface,100,100,300,250,(0,0,0))
+        test = text_font.render('first choice ', True, (255, 255, 255))
+        surface.blit(test, (250 - test.get_width() // 2, 100))
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    status = 'done'
+                    return status
+
+        pygame.display.update()
+    pygame.quit()
