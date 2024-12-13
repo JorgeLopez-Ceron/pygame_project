@@ -18,6 +18,12 @@ def bg(surface,backgrounds):
     for image in backgrounds:
         surface.blit(image, (0,0))
 
+def loading_frames(sprite_sheet,frame_width,frame_height,frames_in_row):
+    frames = []
+    for i in range(frames_in_row):
+        frame = sprite_sheet.subsurface(pygame.Rect(i * frame_width, 0,frame_width, frame_height))
+        frames.append(frame)
+    return frames
 
 #fix screen change from riddle one
 def game(surface,images,button):
@@ -26,13 +32,15 @@ def game(surface,images,button):
     extra_troll_riddle = False
 
     while True:
+        surface.fill((0,0,0))
+        #on yes for first choice and the riddles are the ones that arent working
         if status == 'main_menu':
             status = menu_screen(surface,images,button)
         elif status == 'transition_screen':
             status = transition_screen(surface,images)
         elif status == 'first_choice':
             status = first_choice(surface,images)
-        elif status == 'bear_encounter':
+        elif status == 'bear':
             status = bear_encounter(surface,images)
         elif status == 'bear_death':
             status = bear_death(surface, images)
@@ -77,6 +85,7 @@ def menu_screen(surface,images,button):
 
     # menu game loop
     while run:
+        surface.fill((0,0,0))
         bg(surface,images)
 
         if not button_clicked:
@@ -108,6 +117,7 @@ def transition_screen(surface,images):
     run = True
 
     while run:
+        surface.fill((0,0,0))
         bg(surface,images)
 
         #drawing text
@@ -130,6 +140,8 @@ def transition_screen(surface,images):
 def first_choice(surface,images):
     run = True
     while run:
+
+        surface.fill((0,0,0))
         bg(surface, images)
 
         #draws text box and adds the text on top
@@ -142,8 +154,9 @@ def first_choice(surface,images):
         yes_button = Button(50,350,150,50,(112,128,144),'why not..?',text_font,(255,255,255))
         no_button = Button(300,350,150,50,(112,128,144),'yeahh no..',text_font,(255,255,255))
 
+
         if yes_button.draw(surface):
-            status = 'bear_encounter'
+            status = 'bear'
             return status
         elif no_button.draw(surface):
             status = 'continue_to_bridge'
@@ -160,20 +173,42 @@ def first_choice(surface,images):
 
 def bear_encounter(surface,images):
    run = True
+   frame_width = 64
+   frame_height = 64
+   frames_in_row = 12
+   frame_index = 0
+   clock = pygame.time.Clock()
 
    while run:
+       surface.fill((0, 0, 0))
        bg(surface,images)
 
-       draw_text_box(surface,100,50,300, 100,(112,128,144))
-       draw_text(surface,'bear encounter screen',text_font,(255,255,255),250,75)
+       #load in pandas
+       sprite_sheet = pygame.image.load('PandaFree/PandaWave.png').convert_alpha()
+       bear_eating_sprite_sheet = pygame.image.load('PandaFree/PandaEating.png').convert_alpha()
 
-       hit_button = Button((surface.get_width() // 2 - 50), 400, 100, 50, (112, 128, 144), 'HIT', text_font,(255, 255, 255))
-       run_button = Button((surface.get_width() // 2 + 50), 400, 100, 50, (112, 128, 144), 'RUN', text_font,(255, 255, 255))
+       draw_text(surface,'WILD PANDAS!',text_font,(255,255,255),250,25)
+       draw_text(surface,'What will you do?!',text_font,(255,255,255),250,75)
 
-       if hit_button:
+       hit_button = Button(100, 200, 100, 50, (112, 128, 144), 'HIT', text_font,(255, 255, 255))
+       run_button = Button(300, 200, 100, 50, (112, 128, 144), 'RUN', text_font,(255, 255, 255))
+
+       #actually loading pandas in
+       frames = loading_frames(sprite_sheet,frame_width,frame_height,frames_in_row)
+       frames_for_panda_two = loading_frames(bear_eating_sprite_sheet,frame_width,frame_height,frames_in_row)
+       surface.blit(frames[frame_index],(200,400))
+       surface.blit(frames_for_panda_two[frame_index],(300,400))
+
+       #cycle through frames
+       frame_index += 1
+       if frame_index >= len(frames):
+           frame_index = 0
+
+
+       if hit_button.draw(surface):
            status = 'bear_death'
            return status
-       elif run_button:
+       elif run_button.draw(surface):
            status = 'continue_to_bridge'
            return status
 
@@ -182,6 +217,7 @@ def bear_encounter(surface,images):
                run = False
 
        pygame.display.update()
+       clock.tick(5)
    pygame.quit()
 
 
@@ -190,6 +226,7 @@ def bear_death(surface,images):
 
     while run:
         # background
+        surface.fill((0,0,0))
         bg(surface, images)
 
         #text and box for game over
@@ -197,11 +234,17 @@ def bear_death(surface,images):
         draw_text(surface, 'Game Over!', text_font, (255, 255, 255), 250, 75)
 
         #code for death text
-        draw_text(surface,'Maybe next time try not to',text_font,(255,255,255),250,200)
-        draw_text(surface,'look in the bushes...',text_font,(255,255,255),250,250)
+        draw_text(surface,'You punched the panda.',text_font,(255,255,255),250,150)
+        draw_text(surface,'The panda stared at you.',text_font,(255,255,255),250,200)
+        draw_text(surface,'The panda won.',text_font,(255,255,255),250,250)
+        draw_text(surface,'End of story.',text_font,(255,255,255),250,300)
+
+
+
+
 
         #code for menu button
-        menu_button = Button((surface.get_width() // 2 - 50),350,100,50,(112,128,144),'Menu',text_font,(255,255,255))
+        menu_button = Button((surface.get_width() // 2 - 50),400,100,50,(112,128,144),'Menu',text_font,(255,255,255))
 
         if menu_button.draw(surface):
             status = 'main_menu'
@@ -220,6 +263,7 @@ def continue_to_bridge(surface,images):
     while run:
 
         #background
+        surface.fill((0,0,0))
         bg(surface,images)
 
         #text box and text
@@ -253,6 +297,7 @@ def troll_encounter_v1(surface,images):
     run = True
 
     while run:
+        surface.fill((0,0,0))
         bg(surface, images)
 
         # drawing text
@@ -275,6 +320,7 @@ def troll_encounter_v2(surface,images):
     run = True
 
     while run:
+        surface.fill((0,0,0))
         bg(surface, images)
 
         # drawing text
@@ -299,6 +345,7 @@ def ruins_info(surface,images):
     run = True
 
     while run:
+        surface.fill((0,0,0))
         bg(surface,images)
 
         draw_text_box(surface,50,50,400,400,(112,128,144))
@@ -327,6 +374,7 @@ def riddle_one(surface,images):
     run = True
 
     while run:
+        surface.fill((0,0,0))
         bg(surface,images)
 
         draw_text_box(surface, 50, 50, 400, 250, (112, 128, 144))
@@ -340,9 +388,11 @@ def riddle_one(surface,images):
         call_back_button = Button(150, 400, 200, 40, (112, 128, 144), 'callback', text_font, (255, 255, 255))
 
 
-        if infinite_loop_button.draw(surface):
-            status = 'riddle_ending'
-            return status
+        #if infinite_loop_button.draw(surface):
+         #   status = 'riddle_ending'
+          #  return status
+        draw_text_box(surface,10,350,200,40,(112,128,144))
+        draw_text(surface,'infinite loop',text_font,(255,255,255),100,350)
 
         if recursive_button.draw(surface):
             status = 'riddle_two'
@@ -353,10 +403,21 @@ def riddle_one(surface,images):
             return status
 
 
-
+#fix last 2
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_a:
+                    status = 'riddle_ending'
+                    return status
+                elif event.type == pygame.K_b:
+                    status = 'riddle_two'
+                    return status
+                elif event.type == pygame.K_c:
+                    status = 'riddle_ending'
+                    return status
+
 
         pygame.display.update()
     pygame.quit()
@@ -365,6 +426,7 @@ def riddle_two(surface,images):
     run = True
 
     while run:
+        surface.fill((0,0,0))
         bg(surface,images)
 
         draw_text_box(surface, 50, 50, 400, 250, (112, 128, 144))
@@ -400,6 +462,7 @@ def bear_riddle(surface,images):
     run = True
 
     while run:
+        surface.fill((0,0,0))
         bg(surface, images)
 
         draw_text_box(surface, 50, 50, 400, 250, (112, 128, 144))
@@ -422,6 +485,7 @@ def troll_riddle(surface,images):
     run = True
 
     while run:
+        surface.fill((0,0,0))
         bg(surface, images)
 
         draw_text_box(surface, 50, 50, 400, 250, (112, 128, 144))
@@ -443,6 +507,7 @@ def riddle_ending(surface,images):
 
     while run:
         # background
+        surface.fill((0,0,0))
         bg(surface, images)
 
         # text and box for game over
@@ -473,6 +538,7 @@ def keeper_encounter(surface,images):
     run = True
 
     while run:
+        surface.fill((0,0,0))
         bg(surface,images)
 
         draw_text_box(surface, 50, 50, 400, 250, (112, 128, 144))
@@ -494,6 +560,7 @@ def win_screen(surface,images):
     run = True
 
     while run:
+        surface.fill((0,0,0))
         bg(surface,images)
 
         draw_text_box(surface, 50, 50, 400, 250, (112, 128, 144))
