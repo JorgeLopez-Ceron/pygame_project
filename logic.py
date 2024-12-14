@@ -33,7 +33,6 @@ def game(surface,images,button):
 
     while True:
         surface.fill((0,0,0))
-        #on yes for first choice and the riddles are the ones that arent working
         if status == 'main_menu':
             status = menu_screen(surface,images,button)
         elif status == 'transition_screen':
@@ -57,13 +56,20 @@ def game(surface,images,button):
             status = riddle_one(surface,images)
         elif status == 'riddle_two':
             status = riddle_two(surface,images)
-        elif status == 'riddle_ending':
-            status = riddle_ending(surface, images)
+        elif status == 'riddle_ending_for_riddle1':
+            status = riddle_ending_for_riddle1(surface, images)
+        elif status == 'riddle_ending_for_riddle2':
+            status = riddle_ending_for_riddle2(surface, images)
         elif status == 'continue':
             if extra_troll_riddle:
                status = troll_riddle(surface, images)
+
                if status == 'keeper_encounter':
                     status = keeper_encounter(surface, images)
+               elif status == 'riddle_ending_for_troll_riddle':
+                   status = riddle_ending_for_troll_riddle(surface, images)
+                   extra_troll_riddle = False
+
             else:
                 status = keeper_encounter(surface,images)
 
@@ -95,9 +101,12 @@ def menu_screen(surface,images,button):
 
         if button_clicked:
             #show info screen/text
-            draw_text(surface,'Find the letters to create the code' ,text_font,(255,225,225),250, 100)
-            draw_text(surface,'to return to your world!', text_font,(255,255,255),250,150)
-            draw_text(surface,'Press space to continue',text_font,(255,255,255),250,250)
+            draw_text_box(surface, 25, 50, 450, 350, (112, 128, 144))
+            draw_text(surface,'Find the letters to create the code' ,text_font,(255,225,225),250, 50)
+            draw_text(surface,'to return to your world!', text_font,(255,255,255),250,100)
+            draw_text(surface,'+1 headphones', text_font,(255,255,255),250,200)
+            draw_text(surface,'+1 laptop', text_font,(255,255,255),250,250)
+            draw_text(surface,'Press space to continue!',text_font,(255,255,255),250,350)
 
 
             #check if space is clicked in second screen
@@ -239,10 +248,6 @@ def bear_death(surface,images):
         draw_text(surface,'The panda won.',text_font,(255,255,255),250,250)
         draw_text(surface,'End of story.',text_font,(255,255,255),250,300)
 
-
-
-
-
         #code for menu button
         menu_button = Button((surface.get_width() // 2 - 50),400,100,50,(112,128,144),'Menu',text_font,(255,255,255))
 
@@ -348,14 +353,15 @@ def ruins_info(surface,images):
         surface.fill((0,0,0))
         bg(surface,images)
 
-        draw_text_box(surface,50,50,400,400,(112,128,144))
+        draw_text_box(surface,40,50,420,400,(112,128,144))
         draw_text(surface,'You travel to the ruins where',text_font,(255,255,255),250,50)
         draw_text(surface,'you find the keeper who is',text_font,(255,255,255),250,100)
-        draw_text(surface,'friends with the bear and troll',text_font,(255,255,255),250,150)
-        draw_text(surface,'and is willing to help on one',text_font,(255,255,255),250,200)
-        draw_text(surface,'condition...',text_font,(255,255,255),250,250)
-        draw_text(surface,'OBJ: solve riddles!',text_font,(255,255,255),250,350)
-        draw_text(surface,'Press space!',text_font,(255,255,255),250,400)
+        draw_text(surface,'friends with the troll and is',text_font,(255,255,255),250,150)
+        draw_text(surface,'willing to help on one condition',text_font,(255,255,255),250,200)
+        draw_text(surface,'OBJ: solve riddles!',text_font,(255,255,255),250,250)
+        draw_text(surface,'Press 1,2,or 3 on keyboard to',text_font,(255,255,255),250,300)
+        draw_text(surface,'answer the riddles!',text_font,(255,255,255),250,350)
+        draw_text(surface,'Press space to continue!',text_font,(255,255,255),250,400)
 
 
         for event in pygame.event.get():
@@ -377,45 +383,39 @@ def riddle_one(surface,images):
         surface.fill((0,0,0))
         bg(surface,images)
 
+        #question code
         draw_text_box(surface, 50, 50, 400, 250, (112, 128, 144))
         draw_text(surface,'I call myself to solve a task,',text_font,(255,255,255),250,50)
         draw_text(surface,'but without my base case,',text_font,(255,255,255),250,100)
         draw_text(surface,'my effort wont last...',text_font,(255,255,255),250,150)
         draw_text(surface,'What am I?',text_font,(255,255,255),250,200)
 
-        infinite_loop_button = Button(10, 350, 200, 40, (112, 128, 144), 'Infinite loop', text_font, (255, 255, 255))
-        recursive_button = Button(245, 350, 250, 40, (112, 128, 144), 'recursive function', text_font, (255, 255, 255))
-        call_back_button = Button(150, 400, 200, 40, (112, 128, 144), 'callback', text_font, (255, 255, 255))
-
-
-        #if infinite_loop_button.draw(surface):
-         #   status = 'riddle_ending'
-          #  return status
+        #answer code
+        draw_text(surface,'1',text_font,(255,255,255),10,310)
         draw_text_box(surface,10,350,200,40,(112,128,144))
         draw_text(surface,'infinite loop',text_font,(255,255,255),100,350)
 
-        if recursive_button.draw(surface):
-            status = 'riddle_two'
-            return status
+        draw_text(surface,'2',text_font,(255,255,255),250,310)
+        draw_text_box(surface,250,350,250,40,(112,128,144))
+        draw_text(surface,'recursive function',text_font,(255,255,255),375,350)
 
-        if call_back_button.draw(surface):
-            status = 'riddle_ending'
-            return status
+        draw_text(surface,'3',text_font,(255,255,255),175,430)
+        draw_text_box(surface,175,400,150,40,(112,128,144))
+        draw_text(surface,'callback',text_font,(255,255,255),250,400)
 
-
-#fix last 2
+        #check which number is clicked
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_a:
-                    status = 'riddle_ending'
+                if event.key == pygame.K_1:
+                    status = 'riddle_ending_for_riddle1'
                     return status
-                elif event.type == pygame.K_b:
+                elif event.key == pygame.K_2:
                     status = 'riddle_two'
                     return status
-                elif event.type == pygame.K_c:
-                    status = 'riddle_ending'
+                elif event.key == pygame.K_3:
+                    status = 'riddle_ending_for_riddle1'
                     return status
 
 
@@ -429,6 +429,7 @@ def riddle_two(surface,images):
         surface.fill((0,0,0))
         bg(surface,images)
 
+        #draw question code
         draw_text_box(surface, 50, 50, 400, 250, (112, 128, 144))
         draw_text(surface,'Im a home for your code,',text_font,(255,255,255),250,50)
         draw_text(surface,'both public and private,',text_font,(255,255,255),250,100)
@@ -436,47 +437,29 @@ def riddle_two(surface,images):
         draw_text(surface,'pull requests unite it,',text_font,(255,255,255),250,200)
         draw_text(surface,'What am I?',text_font,(255,255,255),250,250)
 
-        bitbucket_button = Button(10, 350, 200, 40, (112, 128, 144), 'Bitbucket', text_font, (255, 255, 255))
-        git_button = Button(245, 350, 250, 40, (112, 128, 144), 'Git', text_font, (255, 255, 255))
-        github_button = Button(150, 400, 200, 40, (112, 128, 144), 'Github', text_font, (255, 255, 255))
 
-        if bitbucket_button.draw(surface):
-            status = 'riddle_ending'
-            return status
-        elif git_button.draw(surface):
-            status = 'riddle_ending'
-            return status
-        elif github_button.draw(surface):
-            status = 'keeper_encounter'
-            return status
+        draw_text_box(surface, 50, 350, 150, 40, (112, 128, 144))
+        draw_text(surface, 'Bitbucket', text_font, (255, 255, 255), 125, 350)
 
+        draw_text_box(surface, 300, 350, 150, 40, (112, 128, 144))
+        draw_text(surface, 'Git', text_font, (255, 255, 255), 375, 350)
+
+        draw_text_box(surface, 175, 400, 150, 40, (112, 128, 144))
+        draw_text(surface, 'Github', text_font, (255, 255, 255), 250, 400)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-
-        pygame.display.update()
-    pygame.quit()
-
-def bear_riddle(surface,images):
-    run = True
-
-    while run:
-        surface.fill((0,0,0))
-        bg(surface, images)
-
-        draw_text_box(surface, 50, 50, 400, 250, (112, 128, 144))
-        draw_text(surface,'bear riddle',text_font,(255,255,255),250,50)
-
-
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    status = 'main_menu'
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_1:
+                    status = 'riddle_ending_for_riddle2'
                     return status
-
-            if event.type == pygame.QUIT:
-                run = False
+                elif event.key == pygame.K_2:
+                    status = 'riddle_ending_for_riddle2'
+                    return status
+                elif event.key == pygame.K_3:
+                    status = 'continue'
+                    return status
 
         pygame.display.update()
     pygame.quit()
@@ -489,20 +472,40 @@ def troll_riddle(surface,images):
         bg(surface, images)
 
         draw_text_box(surface, 50, 50, 400, 250, (112, 128, 144))
-        draw_text(surface, 'troll riddle', text_font, (255, 255, 255), 250, 50)
+        draw_text(surface, 'Troll riddle', text_font, (255, 255, 255), 250, 0)
+        draw_text(surface,'I am always running, but I',text_font,(255,255,255),250,50)
+        draw_text(surface,'never move. I have a head',text_font,(255,255,255),250,100)
+        draw_text(surface,'but no body. I can crash,',text_font,(255,255,255),250,150)
+        draw_text(surface,'but I never bleed.',text_font,(255,255,255),250,200)
+        draw_text(surface,'What am I..?',text_font,(255,255,255),250,250)
+
+        draw_text_box(surface, 50, 350, 150, 40, (112, 128, 144))
+        draw_text(surface, 'A loop', text_font, (255, 255, 255), 125, 350)
+
+        draw_text_box(surface, 300, 350, 150, 40, (112, 128, 144))
+        draw_text(surface, 'A program', text_font, (255, 255, 255), 375, 350)
+
+        draw_text_box(surface, 175, 400, 150, 40, (112, 128, 144))
+        draw_text(surface, 'A stack', text_font, (255, 255, 255), 250, 400)
 
         for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    status = 'keeper_screen'
-                    return status
-
             if event.type == pygame.QUIT:
                 run = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_1:
+                    status = 'riddle_ending_for_troll_riddle'
+                    return status
+                elif event.key == pygame.K_2:
+                    status = 'keeper_encounter'
+                    return status
+                elif event.key == pygame.K_3:
+                    status = 'riddle_ending_for_troll_riddle'
+                    return status
+
         pygame.display.update()
     pygame.quit()
 
-def riddle_ending(surface,images):
+def riddle_ending_for_riddle1(surface,images):
     run = True
 
     while run:
@@ -519,10 +522,74 @@ def riddle_ending(surface,images):
         draw_text(surface, 'attention in class..', text_font, (255, 255, 255), 250, 250)
 
         # code for menu button
-        menu_button = Button((surface.get_width() // 2 - 50), 350, 100, 50, (112, 128, 144), 'Menu', text_font,
+        go_back_button = Button((surface.get_width() // 2 - 80), 350, 150, 50, (112, 128, 144), 'Go back :)', text_font,
                              (255, 255, 255))
 
-        if menu_button.draw(surface):
+        if go_back_button.draw(surface):
+            status = 'riddle_one'
+            return status
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+        pygame.display.update()
+    pygame.quit()
+
+def riddle_ending_for_riddle2(surface,images):
+    run = True
+
+    while run:
+        # background
+        surface.fill((0,0,0))
+        bg(surface, images)
+
+        # text and box for game over
+        draw_text_box(surface, 100, 50, 300, 100, (112, 128, 144))
+        draw_text(surface, 'Game Over!', text_font, (255, 255, 255), 250, 75)
+
+        # code for death text
+        draw_text(surface, 'Really? Second times the', text_font, (255, 255, 255), 250, 200)
+        draw_text(surface, 'charm I guess? ._.', text_font, (255, 255, 255), 250, 250)
+
+        # code for menu button
+        go_back_button = Button((surface.get_width() // 2 - 80), 350, 150, 50, (112, 128, 144), 'Go back :)', text_font,
+                             (255, 255, 255))
+
+        if go_back_button.draw(surface):
+            status = 'riddle_two'
+            return status
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+        pygame.display.update()
+    pygame.quit()
+
+def riddle_ending_for_troll_riddle(surface,images):
+    run = True
+
+    while run:
+        # background
+        surface.fill((0,0,0))
+        bg(surface, images)
+
+        # text and box for game over
+        draw_text_box(surface, 100, 50, 300, 100, (112, 128, 144))
+        draw_text(surface, 'Game Over!', text_font, (255, 255, 255), 250, 75)
+
+        # code for death text
+        draw_text(surface, 'Thats what you get for not giving', text_font, (255, 255, 255), 250, 150)
+        draw_text(surface, 'me your headphones hehe :p', text_font, (255, 255, 255), 250, 200)
+        draw_text(surface, 'now go back to start!', text_font, (255, 255, 255), 250, 250)
+        draw_text(surface,'mwahahaha',text_font,(255,255,255),250,300)
+
+        # code for menu button
+        go_back_button = Button((surface.get_width() // 2 - 80), 350, 150, 50, (112, 128, 144), 'Go back :)', text_font,
+                             (255, 255, 255))
+
+        if go_back_button.draw(surface):
             status = 'main_menu'
             return status
 
@@ -533,7 +600,6 @@ def riddle_ending(surface,images):
         pygame.display.update()
     pygame.quit()
 
-
 def keeper_encounter(surface,images):
     run = True
 
@@ -541,7 +607,7 @@ def keeper_encounter(surface,images):
         surface.fill((0,0,0))
         bg(surface,images)
 
-        draw_text_box(surface, 50, 50, 400, 250, (112, 128, 144))
+        draw_text_box(surface, 100, 50, 300, 100, (112, 128, 144))
         draw_text(surface, 'keeper screen', text_font, (255, 255, 255), 250, 50)
 
         for event in pygame.event.get():
@@ -563,19 +629,20 @@ def win_screen(surface,images):
         surface.fill((0,0,0))
         bg(surface,images)
 
-        draw_text_box(surface, 50, 50, 400, 250, (112, 128, 144))
-        draw_text(surface,'Win screen',text_font,(255,255,255),250,50)
+        draw_text_box(surface, 100, 50, 300, 100, (112, 128, 144))
+        draw_text(surface,'Congrats!',text_font,(255,255,255),250,50)
+        draw_text(surface,'You Win!!!',text_font,(255,255,255),250,100)
+        draw_text(surface,'You obtained the code and made',text_font,(255,255,255),250,200)
+        draw_text(surface,'it back to your world!',text_font,(255,255,255),250,250)
+        draw_text(surface,'The End!',text_font,(255,255,255),250,300)
 
+        menu_button = Button((surface.get_width() // 2 - 50), 400, 100, 50, (112, 128, 144), 'Menu', text_font,(255, 255, 255))
 
-
-
+        if menu_button.draw(surface):
+            status = 'main_menu'
+            return status
 
         for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    status = 'main_menu'
-                    return status
-
             if event.type == pygame.QUIT:
                 run = False
 
