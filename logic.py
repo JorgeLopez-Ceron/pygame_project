@@ -152,7 +152,7 @@ def menu_screen(surface:pygame.Surface, images:list[pygame.Surface], button:Butt
     run = True
     button_clicked = False
 
-#code for title
+    #code for title
     font = pygame.font.Font('BungeeTint-Regular.ttf', 50)
     title = font.render('Crack The Code', True, (255,255,255))
 
@@ -176,7 +176,7 @@ def menu_screen(surface:pygame.Surface, images:list[pygame.Surface], button:Butt
             draw_text(surface,'Press space to continue!',text_font,(255,255,255),250,350)
 
 
-            #check if space is clicked in second screen
+        #check if space is clicked in second screen
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -317,7 +317,7 @@ def bear_encounter(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
         hit_button = Button(100, 200, 100, 50, (112, 128, 144), 'HIT', text_font,(255, 255, 255))
         run_button = Button(300, 200, 100, 50, (112, 128, 144), 'RUN', text_font,(255, 255, 255))
 
-        #actually loading pandas in
+        #actually drawing pandas in
         frames = loading_frames(panda_waving_sprite_sheet,frame_width,frame_height,frames_in_row)
         frames_for_panda_two = loading_frames(panda_eating_sprite_sheet,frame_width,frame_height,frames_in_row)
         surface.blit(frames[frame_index],(200,400))
@@ -467,11 +467,11 @@ def troll_encounter_v1(surface:pygame.Surface, images:list[pygame.Surface]) -> s
         draw_text(surface,'the way to an old pall',text_font,(255,255,255),250,300)
         draw_text(surface,'Press space!',text_font,(255,255,255),250,350)
 
-
-
+        #load and draw troll
         troll = pygame.image.load('IDLE_000.png').convert_alpha()
         surface.blit(troll,(200,400))
 
+        #load in dino
         sprite_sheet_dino = pygame.image.load('DinoSprites - doux.png').convert_alpha()
         frames = loading_frames(sprite_sheet_dino, frame_width, frame_height, frames_in_row)
         surface.blit(frames[frame_index], (100, 400))
@@ -526,9 +526,11 @@ def troll_encounter_v2(surface:pygame.Surface, images:list[pygame.Surface]) -> s
         draw_text(surface, 'Hurry get away!', text_font, (255, 255, 255), 250, 250)
         draw_text(surface, 'Press space!', text_font, (255, 255, 255), 250, 300)
 
+        #draw troll
         troll = pygame.image.load('ATTAK_002.png').convert_alpha()
         surface.blit(troll, (100, 380))
 
+        #draw dino
         sprite_sheet_dino = pygame.image.load('DinoSprites - doux.png').convert_alpha()
         frames = loading_frames(sprite_sheet_dino, frame_width, frame_height, frames_in_row)
         surface.blit(frames[frame_index], (300, 400))
@@ -568,6 +570,7 @@ def ruins_info(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
         surface.fill((0,0,0))
         bg(surface,images)
 
+        #drawing text
         draw_text_box(surface,40,50,420,400,(112,128,144))
         draw_text(surface,'You travel to the ruins where',text_font,(255,255,255),250,50)
         draw_text(surface,'you find the keeper who is',text_font,(255,255,255),250,100)
@@ -672,6 +675,7 @@ def riddle_two(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
         draw_text(surface,'pull requests unite it,',text_font,(255,255,255),250,200)
         draw_text(surface,'What am I?',text_font,(255,255,255),250,250)
 
+        #answers
         draw_text(surface, '1', text_font, (255, 255, 255), 50, 310)
         draw_text_box(surface, 50, 350, 150, 40, (112, 128, 144))
         draw_text(surface, 'Bitbucket', text_font, (255, 255, 255), 125, 350)
@@ -684,6 +688,7 @@ def riddle_two(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
         draw_text_box(surface, 175, 400, 150, 40, (112, 128, 144))
         draw_text(surface, 'Github', text_font, (255, 255, 255), 250, 400)
 
+        #check which one selected
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -718,6 +723,7 @@ def troll_riddle(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
         surface.fill((0,0,0))
         bg(surface, images)
 
+        #draw troll riddle question
         draw_text_box(surface, 50, 50, 400, 250, (112, 128, 144))
         draw_text(surface, 'Troll riddle', text_font, (255, 255, 255), 250, 0)
         draw_text(surface,'I am always running, but I',text_font,(255,255,255),250,50)
@@ -726,6 +732,7 @@ def troll_riddle(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
         draw_text(surface,'but I never bleed.',text_font,(255,255,255),250,200)
         draw_text(surface,'What am I..?',text_font,(255,255,255),250,250)
 
+        #draw answers
         draw_text(surface, '1', text_font, (255, 255, 255), 50, 310)
         draw_text_box(surface, 50, 350, 150, 40, (112, 128, 144))
         draw_text(surface, 'A loop', text_font, (255, 255, 255), 125, 350)
@@ -738,6 +745,7 @@ def troll_riddle(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
         draw_text_box(surface, 175, 400, 150, 40, (112, 128, 144))
         draw_text(surface, 'A stack', text_font, (255, 255, 255), 250, 400)
 
+        #check which answers is chosen
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -905,6 +913,7 @@ def keeper_encounter(surface:pygame.Surface, images:list[pygame.Surface]) -> str
         # load in ghost
         sprite_sheet = pygame.image.load('Mr.Ghost_Idle.png').convert_alpha()
 
+        #draw textbox and text
         draw_text_box(surface, 100, 50, 300, 50, (112, 128, 144))
         draw_text(surface, 'Ruins keeper', text_font, (255, 255, 255), 250, 50)
 
@@ -914,12 +923,11 @@ def keeper_encounter(surface:pygame.Surface, images:list[pygame.Surface]) -> str
         draw_text(surface,'is the code: XIT',text_font,(255,255,255),250,250)
         draw_text(surface,'Press space to use code!',text_font,(255,255,255),250,300)
 
-
-
-
+        #draw in ghost
         frames_for_ghost = loading_frames(sprite_sheet, frame_width, frame_height, frames_in_row)
         surface.blit(frames_for_ghost[frame_index], (200, 400))
 
+        #code to animate ghost
         frame_index += 1
         if frame_index >= len(frames_for_ghost):
             frame_index = 0
@@ -954,6 +962,7 @@ def win_screen(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
         surface.fill((0,0,0))
         bg(surface,images)
 
+        #draw in celebration text and textbox
         draw_text_box(surface, 100, 50, 300, 100, (112, 128, 144))
         draw_text(surface,'Congrats!',text_font,(255,255,255),250,50)
         draw_text(surface,'You Win!!!',text_font,(255,255,255),250,100)
@@ -961,6 +970,7 @@ def win_screen(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
         draw_text(surface,'it back to your world!',text_font,(255,255,255),250,250)
         draw_text(surface,'The End!',text_font,(255,255,255),250,300)
 
+        #draw in menu button
         menu_button = Button((surface.get_width() // 2 - 50), 400, 100, 50, (112, 128, 144), 'Menu', text_font,(255, 255, 255))
 
         if menu_button.draw(surface):
