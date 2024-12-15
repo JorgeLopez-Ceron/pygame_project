@@ -2,7 +2,21 @@
 import pygame
 
 class Button:
-    def __init__(self, x, y, width, height, color, text, font, text_color):
+    def __init__(self, x:int, y:int, width:int, height:int, color:tuple[int,int,int], text:str, font:pygame.font.Font, text_color:tuple[int,int,int]) -> None:
+        """
+        This class creates a button using args
+
+        Args:
+            x: the x coord of the button
+            y: the y coord of the button
+            width: how wide you want the button
+            height: the height you want the button
+            color: what color you want the button to be
+            text: what you want written on the button
+            font: what font you want to use to render the text
+            text_color: what color you want the text to be
+
+        """
         self.rect = pygame.Rect(x, y, width, height)
         self.color = color
         self.text = text
@@ -10,7 +24,16 @@ class Button:
         self.text_color = text_color
         self.clicked = False
 
-    def draw(self,surface):
+    def draw(self,surface:pygame.Surface) -> bool:
+        """
+        Draws the button on the screen and checks to see if it's been clicked
+
+        Args:
+            surface: the screen you want the button to be on
+
+        Returns:
+            bool: True if the button is clicked else False
+        """
         #draw button
         pygame.draw.rect(surface, self.color, self.rect)
 

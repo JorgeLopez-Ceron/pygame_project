@@ -1,34 +1,90 @@
-#add here any classes from the main
 import pygame
 from button import Button
 
 text_font = pygame.font.Font('GemunuLibre-VariableFont_wght.ttf', 40)
 
+def draw_text_box(surface: pygame.Surface,x: int, y:int, box_length: int, box_width: int, box_color: tuple[int,int,int]) -> None:
+    """
+    This function creates a text box with the args provided
 
-def draw_text_box(surface, x, y, box_length, box_width, box_color):
+    Args:
+        surface: the screen the box is going on
+        x: x coord of the text box
+        y: y coord of the text box
+        box_length: how long you want the box to be
+        box_width: how wide you want the box to be
+        box_color: what color the box will be
+
+    Returns:
+        no returns
+    """
     pygame.draw.rect(surface, box_color, (x, y, box_length,box_width))
 
-def draw_text(surface,text,font,text_color,x,y):
+def draw_text(surface:pygame.Surface, text:str, font:pygame.font.Font, text_color:tuple[int,int,int], x:int, y:int) -> None:
+    """
+    This function creates text with the args provided
+
+    Args:
+        surface: the screen the box is going on
+        text: string of text you want displayed
+        font: specific font for text
+        text_color: what color you want the text to be
+        x: x coord of where the text will be placed
+        y: y coord of where the text will be placed
+
+    Returns:
+        no returns
+    """
     print_text = font.render(text,True,text_color)
     length = print_text.get_width()
     surface.blit(print_text,(x - length // 2, y))
 
-def bg(surface,backgrounds):
-    #draw them into screen
+def bg(surface:pygame.Surface, backgrounds:list[pygame.Surface]) -> None:
+    """
+    This function gets the list of images and creates the background
+
+    Args:
+        surface: the screen the bg will go on
+        backgrounds: list of images used for bg
+
+    Returns:
+        no returns
+    """
     for image in backgrounds:
         surface.blit(image, (0,0))
 
-def loading_frames(sprite_sheet,frame_width,frame_height,frames_in_row):
+def loading_frames(sprite_sheet:pygame.Surface, frame_width: int, frame_height:int, frames_in_row:int) -> list[pygame.Surface]:
+    """
+    This function creates frames for sprite animation from args provided and returns a list of frames
+
+    Args:
+        sprite_sheet: the sprite sheet of the character you want to animate
+        frame_width: the width of each frame in the sprite sheet
+        frame_height: the height of each frame in the sprite sheet
+        frames_in_row: how many frames are in total in the sprite sheet
+
+    Returns:
+        list[pygame.Surface]: a list of frames that have been modified to each have their own squares to animate
+    """
     frames = []
     for i in range(frames_in_row):
         frame = sprite_sheet.subsurface(pygame.Rect(i * frame_width, 0,frame_width, frame_height))
         frames.append(frame)
     return frames
 
-#fix screen change from riddle one
-def game(surface,images,button):
+def game(surface:pygame.Surface, images:list[pygame.Surface],button:Button) -> None:
+    """
+    This function runs the game and switches screens when needed
+
+    Args:
+        surface: the screen that the game will be on
+        images: the list of bg images for the game
+        button: the starter button for the menu
+
+    Returns:
+        no returns
+    """
     status = 'main_menu'
-    #extra_bear_riddle = False
     extra_troll_riddle = False
 
     while True:
@@ -44,7 +100,7 @@ def game(surface,images,button):
         elif status == 'bear_death':
             status = bear_death(surface, images)
         elif status == 'continue_to_bridge':
-            status = continue_to_bridge(surface,images)
+            status = continue_to_troll(surface,images)
         elif status == 'troll_encounter_v1':
             status = troll_encounter_v1(surface,images)
         elif status == 'troll_encounter_v2':
@@ -81,7 +137,18 @@ def game(surface,images,button):
 
 
 
-def menu_screen(surface,images,button):
+def menu_screen(surface:pygame.Surface, images:list[pygame.Surface], button:Button) ->str:
+    """
+    This function provides the code for the menu screen
+
+    Args:
+        surface: the screen that the menu will be on
+        images: the list of bg images for the game
+        button: the starter button for the menu
+
+    Returns:
+        str: returns status of next screen
+    """
     run = True
     button_clicked = False
 
@@ -122,7 +189,17 @@ def menu_screen(surface,images,button):
     pygame.quit()
 
 
-def transition_screen(surface,images):
+def transition_screen(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
+    """
+    This function provides the code for the transition screen
+
+    Args:
+        surface: the screen that the menu will be on
+        images: the list of bg images for the game
+
+    Returns:
+        str: returns status of next screen
+    """
     run = True
     frame_width = 64
     frame_height = 64
@@ -130,18 +207,21 @@ def transition_screen(surface,images):
     frame_index = 0
     clock = pygame.time.Clock()
 
-
     while run:
-        surface.fill((0,0,0))
-        bg(surface,images)
+        surface.fill((0, 0, 0))
+        bg(surface, images)
 
         #drawing text
-        draw_text(surface,'transition screen',text_font,(255,255,255),250,100)
-        draw_text(surface,'Press space!',text_font,(255,255,255),250,250)
+        draw_text_box(surface,50,50,400,350,(112,128,144))
+        draw_text(surface,'You run along confused yet',text_font,(255,255,255),250,50)
+        draw_text(surface,'determined to find the',text_font,(255,255,255),250,100)
+        draw_text(surface,'code and you suddenly hear',text_font,(255,255,255),250,150)
+        draw_text(surface,'something close by',text_font,(255,255,255),250,200)
+        draw_text(surface,'Press space!',text_font,(255,255,255),250,350)
 
         sprite_sheet_dino = pygame.image.load('DinoSprites - doux.png').convert_alpha()
         frames = loading_frames(sprite_sheet_dino, frame_width, frame_height, frames_in_row)
-        surface.blit(frames[frame_index], (100, 400))
+        surface.blit(frames[frame_index], (220, 275))
 
         # cycle through frames
         frame_index += 1
@@ -161,7 +241,17 @@ def transition_screen(surface,images):
         clock.tick(5)
     pygame.quit()
 
-def first_choice(surface,images):
+def first_choice(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
+    """
+    This function provides the code for the first_choice screen
+
+    Args:
+        surface: the screen that the menu will be on
+        images: the list of bg images for the game
+
+    Returns:
+        str: returns status of next screen
+    """
     run = True
     while run:
 
@@ -195,57 +285,77 @@ def first_choice(surface,images):
         pygame.display.update()
     pygame.quit()
 
-def bear_encounter(surface,images):
-   run = True
-   frame_width = 64
-   frame_height = 64
-   frames_in_row = 12
-   frame_index = 0
-   clock = pygame.time.Clock()
+def bear_encounter(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
+    """
+        This function provides the code for the panda bear screen
 
-   while run:
-       surface.fill((0, 0, 0))
-       bg(surface,images)
+        Args:
+            surface: the screen that the menu will be on
+            images: the list of bg images for the game
 
-       #load in pandas
-       sprite_sheet = pygame.image.load('PandaWave.png').convert_alpha()
-       bear_eating_sprite_sheet = pygame.image.load('PandaEating.png').convert_alpha()
+        Returns:
+            str: returns status of next screen
+        """
+    run = True
+    frame_width = 64
+    frame_height = 64
+    frames_in_row = 12
+    frame_index = 0
+    clock = pygame.time.Clock()
 
-       draw_text(surface,'WILD PANDAS!',text_font,(255,255,255),250,25)
-       draw_text(surface,'What will you do?!',text_font,(255,255,255),250,75)
+    while run:
+        surface.fill((0, 0, 0))
+        bg(surface,images)
 
-       hit_button = Button(100, 200, 100, 50, (112, 128, 144), 'HIT', text_font,(255, 255, 255))
-       run_button = Button(300, 200, 100, 50, (112, 128, 144), 'RUN', text_font,(255, 255, 255))
+        #load in pandas
+        panda_waving_sprite_sheet = pygame.image.load('PandaWave.png').convert_alpha()
+        panda_eating_sprite_sheet = pygame.image.load('PandaEating.png').convert_alpha()
 
-       #actually loading pandas in
-       frames = loading_frames(sprite_sheet,frame_width,frame_height,frames_in_row)
-       frames_for_panda_two = loading_frames(bear_eating_sprite_sheet,frame_width,frame_height,frames_in_row)
-       surface.blit(frames[frame_index],(200,400))
-       surface.blit(frames_for_panda_two[frame_index],(300,400))
+        draw_text(surface,'WILD PANDAS!',text_font,(255,255,255),250,25)
+        draw_text(surface,'What will you do?!',text_font,(255,255,255),250,75)
 
-       #cycle through frames
-       frame_index += 1
-       if frame_index >= len(frames):
-           frame_index = 0
+        hit_button = Button(100, 200, 100, 50, (112, 128, 144), 'HIT', text_font,(255, 255, 255))
+        run_button = Button(300, 200, 100, 50, (112, 128, 144), 'RUN', text_font,(255, 255, 255))
 
+        #actually loading pandas in
+        frames = loading_frames(panda_waving_sprite_sheet,frame_width,frame_height,frames_in_row)
+        frames_for_panda_two = loading_frames(panda_eating_sprite_sheet,frame_width,frame_height,frames_in_row)
+        surface.blit(frames[frame_index],(200,400))
+        surface.blit(frames_for_panda_two[frame_index],(300,400))
 
-       if hit_button.draw(surface):
-           status = 'bear_death'
-           return status
-       elif run_button.draw(surface):
-           status = 'continue_to_bridge'
-           return status
-
-       for event in pygame.event.get():
-           if event.type == pygame.QUIT:
-               run = False
-
-       pygame.display.update()
-       clock.tick(5)
-   pygame.quit()
+        #cycle through frames
+        frame_index += 1
+        if frame_index >= len(frames):
+            frame_index = 0
 
 
-def bear_death(surface,images):
+        if hit_button.draw(surface):
+            status = 'bear_death'
+            return status
+        elif run_button.draw(surface):
+            status = 'continue_to_bridge'
+            return status
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+        pygame.display.update()
+        clock.tick(5)
+    pygame.quit()
+
+
+def bear_death(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
+    """
+    This function provides the code for the panda bear death screen
+
+    Args:
+        surface: the screen that the menu will be on
+        images: the list of bg images for the game
+
+    Returns:
+        str: returns status of next screen
+    """
     run = True
 
     while run:
@@ -258,10 +368,11 @@ def bear_death(surface,images):
         draw_text(surface, 'Game Over!', text_font, (255, 255, 255), 250, 75)
 
         #code for death text
-        draw_text(surface,'You punched the panda.',text_font,(255,255,255),250,150)
-        draw_text(surface,'The panda stared at you.',text_font,(255,255,255),250,200)
-        draw_text(surface,'The panda won.',text_font,(255,255,255),250,250)
-        draw_text(surface,'End of story.',text_font,(255,255,255),250,300)
+        draw_text(surface,'You punched the panda but it did',text_font,(255,255,255),250,150)
+        draw_text(surface,'no damage and instead the panda',text_font,(255,255,255),250,200)
+        draw_text(surface,'just ate your laptop ultimately',text_font,(255,255,255),250,250)
+        draw_text(surface,'trapping you in here forever...',text_font,(255,255,255),250,300)
+        draw_text(surface,'-1 laptop',text_font,(255,255,255),250,350)
 
         #code for menu button
         menu_button = Button((surface.get_width() // 2 - 50),400,100,50,(112,128,144),'Menu',text_font,(255,255,255))
@@ -277,7 +388,17 @@ def bear_death(surface,images):
         pygame.display.update()
     pygame.quit()
 
-def continue_to_bridge(surface,images):
+def continue_to_troll(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
+    """
+    This function provides the code for the continuing to troll screen
+
+    Args:
+        surface: the screen that the menu will be on
+        images: the list of bg images for the game
+
+    Returns:
+        str: returns status of next screen
+    """
     run = True
 
     while run:
@@ -313,16 +434,52 @@ def continue_to_bridge(surface,images):
         pygame.display.update()
     pygame.quit()
 
-def troll_encounter_v1(surface,images):
+def troll_encounter_v1(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
+    """
+    This function provides the code for the first version of the troll screen
+
+    Args:
+        surface: the screen that the menu will be on
+        images: the list of bg images for the game
+
+    Returns:
+        str: returns status of next screen
+    """
     run = True
+    frame_width = 64
+    frame_height = 64
+    frames_in_row = 4
+    frame_index = 0
+    clock = pygame.time.Clock()
 
     while run:
         surface.fill((0,0,0))
         bg(surface, images)
 
         # drawing text
-        draw_text(surface, 'troll encounter v1 screen', text_font, (255, 255, 255), 250, 100)
-        draw_text(surface, 'Press space!', text_font, (255, 255, 255), 250, 250)
+        draw_text_box(surface, 100, 50, 300, 50, (112, 128, 144))
+        draw_text(surface, 'TROLL', text_font, (255, 255, 255), 250, 50)
+
+        draw_text_box(surface, 75, 150, 350, 250, (112, 128, 144))
+        draw_text(surface,'Thank you friend I shall',text_font,(255,255,255),250,150)
+        draw_text(surface,'take these as payment.',text_font,(255,255,255),250,200)
+        draw_text(surface,'Now follow, me show you',text_font,(255,255,255),250,250)
+        draw_text(surface,'the way to an old pall',text_font,(255,255,255),250,300)
+        draw_text(surface,'Press space!',text_font,(255,255,255),250,350)
+
+
+
+        troll = pygame.image.load('IDLE_000.png').convert_alpha()
+        surface.blit(troll,(200,400))
+
+        sprite_sheet_dino = pygame.image.load('DinoSprites - doux.png').convert_alpha()
+        frames = loading_frames(sprite_sheet_dino, frame_width, frame_height, frames_in_row)
+        surface.blit(frames[frame_index], (100, 400))
+
+        # cycle through frames
+        frame_index += 1
+        if frame_index >= len(frames):
+            frame_index = 0
 
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -334,18 +491,52 @@ def troll_encounter_v1(surface,images):
                 run = False
 
         pygame.display.update()
+        clock.tick(5)
     pygame.quit()
 
-def troll_encounter_v2(surface,images):
+def troll_encounter_v2(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
+    """
+    This function provides the code for the second version of the troll screen
+
+    Args:
+        surface: the screen that the menu will be on
+        images: the list of bg images for the game
+
+    Returns:
+        str: returns status of next screen
+    """
     run = True
+    frame_width = 64
+    frame_height = 64
+    frames_in_row = 4
+    frame_index = 0
+    clock = pygame.time.Clock()
 
     while run:
-        surface.fill((0,0,0))
+        surface.fill((0, 0, 0))
         bg(surface, images)
 
         # drawing text
-        draw_text(surface, 'troll encounter v2', text_font, (255, 255, 255), 250, 100)
-        draw_text(surface, 'Press space!', text_font, (255, 255, 255), 250, 250)
+        draw_text_box(surface, 100, 50, 300, 50, (112, 128, 144))
+        draw_text(surface, 'TROLL', text_font, (255, 255, 255), 250, 50)
+
+        draw_text_box(surface, 75, 150, 350, 200, (112, 128, 144))
+        draw_text(surface, 'GRRR ME MAKE YOU', text_font, (255, 255, 255), 250, 150)
+        draw_text(surface, 'REGRET THISS!!', text_font, (255, 255, 255), 250, 200)
+        draw_text(surface, 'Hurry get away!', text_font, (255, 255, 255), 250, 250)
+        draw_text(surface, 'Press space!', text_font, (255, 255, 255), 250, 300)
+
+        troll = pygame.image.load('ATTAK_002.png').convert_alpha()
+        surface.blit(troll, (100, 380))
+
+        sprite_sheet_dino = pygame.image.load('DinoSprites - doux.png').convert_alpha()
+        frames = loading_frames(sprite_sheet_dino, frame_width, frame_height, frames_in_row)
+        surface.blit(frames[frame_index], (300, 400))
+
+        # cycle through frames
+        frame_index += 1
+        if frame_index >= len(frames):
+            frame_index = 0
 
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -357,11 +548,20 @@ def troll_encounter_v2(surface,images):
                 run = False
 
         pygame.display.update()
+        clock.tick(5)
     pygame.quit()
 
-#maybe add a troll death?
+def ruins_info(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
+    """
+    This function provides the code for the ruins info screen
 
-def ruins_info(surface,images):
+    Args:
+        surface: the screen that the menu will be on
+        images: the list of bg images for the game
+
+    Returns:
+        str: returns status of next screen
+    """
     run = True
 
     while run:
@@ -391,7 +591,17 @@ def ruins_info(surface,images):
         pygame.display.update()
     pygame.quit()
 
-def riddle_one(surface,images):
+def riddle_one(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
+    """
+    This function provides the code for the first riddle screen
+
+    Args:
+        surface: the screen that the menu will be on
+        images: the list of bg images for the game
+
+    Returns:
+        str: returns status of next screen
+    """
     run = True
 
     while run:
@@ -437,7 +647,17 @@ def riddle_one(surface,images):
         pygame.display.update()
     pygame.quit()
 
-def riddle_two(surface,images):
+def riddle_two(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
+    """
+    This function provides the code for the second riddle screen
+
+    Args:
+        surface: the screen that the menu will be on
+        images: the list of bg images for the game
+
+    Returns:
+        str: returns status of next screen
+    """
     run = True
 
     while run:
@@ -452,13 +672,15 @@ def riddle_two(surface,images):
         draw_text(surface,'pull requests unite it,',text_font,(255,255,255),250,200)
         draw_text(surface,'What am I?',text_font,(255,255,255),250,250)
 
-
+        draw_text(surface, '1', text_font, (255, 255, 255), 50, 310)
         draw_text_box(surface, 50, 350, 150, 40, (112, 128, 144))
         draw_text(surface, 'Bitbucket', text_font, (255, 255, 255), 125, 350)
 
+        draw_text(surface,'2',text_font,(255,255,255),300,310)
         draw_text_box(surface, 300, 350, 150, 40, (112, 128, 144))
         draw_text(surface, 'Git', text_font, (255, 255, 255), 375, 350)
 
+        draw_text(surface,'3',text_font,(255,255,255),175,430)
         draw_text_box(surface, 175, 400, 150, 40, (112, 128, 144))
         draw_text(surface, 'Github', text_font, (255, 255, 255), 250, 400)
 
@@ -479,7 +701,17 @@ def riddle_two(surface,images):
         pygame.display.update()
     pygame.quit()
 
-def troll_riddle(surface,images):
+def troll_riddle(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
+    """
+    This function provides the code for the troll riddle screen
+
+    Args:
+        surface: the screen that the menu will be on
+        images: the list of bg images for the game
+
+    Returns:
+        str: returns status of next screen
+    """
     run = True
 
     while run:
@@ -494,12 +726,15 @@ def troll_riddle(surface,images):
         draw_text(surface,'but I never bleed.',text_font,(255,255,255),250,200)
         draw_text(surface,'What am I..?',text_font,(255,255,255),250,250)
 
+        draw_text(surface, '1', text_font, (255, 255, 255), 50, 310)
         draw_text_box(surface, 50, 350, 150, 40, (112, 128, 144))
         draw_text(surface, 'A loop', text_font, (255, 255, 255), 125, 350)
 
+        draw_text(surface,'2',text_font,(255,255,255),300,310)
         draw_text_box(surface, 300, 350, 150, 40, (112, 128, 144))
         draw_text(surface, 'A program', text_font, (255, 255, 255), 375, 350)
 
+        draw_text(surface,'3',text_font,(255,255,255),175,430)
         draw_text_box(surface, 175, 400, 150, 40, (112, 128, 144))
         draw_text(surface, 'A stack', text_font, (255, 255, 255), 250, 400)
 
@@ -520,7 +755,17 @@ def troll_riddle(surface,images):
         pygame.display.update()
     pygame.quit()
 
-def riddle_ending_for_riddle1(surface,images):
+def riddle_ending_for_riddle1(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
+    """
+    This function provides the code for the ending screen if you get riddle 1 wrong
+
+    Args:
+        surface: the screen that the menu will be on
+        images: the list of bg images for the game
+
+    Returns:
+        str: returns status of next screen
+    """
     run = True
 
     while run:
@@ -551,7 +796,17 @@ def riddle_ending_for_riddle1(surface,images):
         pygame.display.update()
     pygame.quit()
 
-def riddle_ending_for_riddle2(surface,images):
+def riddle_ending_for_riddle2(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
+    """
+    This function provides the code for the ending screen if you get riddle 2 wrong
+
+    Args:
+        surface: the screen that the menu will be on
+        images: the list of bg images for the game
+
+    Returns:
+        str: returns status of next screen
+    """
     run = True
 
     while run:
@@ -582,7 +837,17 @@ def riddle_ending_for_riddle2(surface,images):
         pygame.display.update()
     pygame.quit()
 
-def riddle_ending_for_troll_riddle(surface,images):
+def riddle_ending_for_troll_riddle(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
+    """
+    This function provides the code for the ending screen if you get the troll riddle wrong
+
+    Args:
+        surface: the screen that the menu will be on
+        images: the list of bg images for the game
+
+    Returns:
+        str: returns status of next screen
+    """
     run = True
 
     while run:
@@ -615,7 +880,17 @@ def riddle_ending_for_troll_riddle(surface,images):
         pygame.display.update()
     pygame.quit()
 
-def keeper_encounter(surface,images):
+def keeper_encounter(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
+    """
+    This function provides the code for the keeper encounter screen
+
+    Args:
+        surface: the screen that the menu will be on
+        images: the list of bg images for the game
+
+    Returns:
+        str: returns status of next screen
+    """
     run = True
     frame_width = 64
     frame_height = 64
@@ -630,8 +905,17 @@ def keeper_encounter(surface,images):
         # load in ghost
         sprite_sheet = pygame.image.load('Mr.Ghost_Idle.png').convert_alpha()
 
-        draw_text_box(surface, 100, 50, 300, 100, (112, 128, 144))
+        draw_text_box(surface, 100, 50, 300, 50, (112, 128, 144))
         draw_text(surface, 'Ruins keeper', text_font, (255, 255, 255), 250, 50)
+
+        draw_text_box(surface,75,150,350,200,(112,128,144))
+        draw_text(surface,'Good job on passing the',text_font,(255,255,255),250,150)
+        draw_text(surface,'riddles! As promised here',text_font,(255,255,255),250,200)
+        draw_text(surface,'is the code: XIT',text_font,(255,255,255),250,250)
+        draw_text(surface,'Press space to use code!',text_font,(255,255,255),250,300)
+
+
+
 
         frames_for_ghost = loading_frames(sprite_sheet, frame_width, frame_height, frames_in_row)
         surface.blit(frames_for_ghost[frame_index], (200, 400))
@@ -653,7 +937,17 @@ def keeper_encounter(surface,images):
         clock.tick(5)
     pygame.quit()
 
-def win_screen(surface,images):
+def win_screen(surface:pygame.Surface, images:list[pygame.Surface]) -> str:
+    """
+    This function provides the code for the win screen at the end
+
+    Args:
+        surface: the screen that the menu will be on
+        images: the list of bg images for the game
+
+    Returns:
+        str: returns status of next screen
+    """
     run = True
 
     while run:
