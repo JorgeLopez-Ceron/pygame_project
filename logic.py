@@ -124,6 +124,12 @@ def menu_screen(surface,images,button):
 
 def transition_screen(surface,images):
     run = True
+    frame_width = 64
+    frame_height = 64
+    frames_in_row = 11
+    frame_index = 0
+    clock = pygame.time.Clock()
+
 
     while run:
         surface.fill((0,0,0))
@@ -133,6 +139,14 @@ def transition_screen(surface,images):
         draw_text(surface,'transition screen',text_font,(255,255,255),250,100)
         draw_text(surface,'Press space!',text_font,(255,255,255),250,250)
 
+        sprite_sheet_dino = pygame.image.load('DinoSprites - doux.png').convert_alpha()
+        frames = loading_frames(sprite_sheet_dino, frame_width, frame_height, frames_in_row)
+        surface.blit(frames[frame_index], (100, 400))
+
+        # cycle through frames
+        frame_index += 1
+        if frame_index >= len(frames):
+            frame_index = 0
 
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -144,6 +158,7 @@ def transition_screen(surface,images):
                 run = False
 
         pygame.display.update()
+        clock.tick(5)
     pygame.quit()
 
 def first_choice(surface,images):
@@ -193,8 +208,8 @@ def bear_encounter(surface,images):
        bg(surface,images)
 
        #load in pandas
-       sprite_sheet = pygame.image.load('PandaFree/PandaWave.png').convert_alpha()
-       bear_eating_sprite_sheet = pygame.image.load('PandaFree/PandaEating.png').convert_alpha()
+       sprite_sheet = pygame.image.load('PandaWave.png').convert_alpha()
+       bear_eating_sprite_sheet = pygame.image.load('PandaEating.png').convert_alpha()
 
        draw_text(surface,'WILD PANDAS!',text_font,(255,255,255),250,25)
        draw_text(surface,'What will you do?!',text_font,(255,255,255),250,75)
@@ -602,13 +617,28 @@ def riddle_ending_for_troll_riddle(surface,images):
 
 def keeper_encounter(surface,images):
     run = True
+    frame_width = 64
+    frame_height = 64
+    frames_in_row = 4
+    frame_index = 0
+    clock = pygame.time.Clock()
 
     while run:
-        surface.fill((0,0,0))
-        bg(surface,images)
+        surface.fill((0, 0, 0))
+        bg(surface, images)
+
+        # load in ghost
+        sprite_sheet = pygame.image.load('Mr.Ghost_Idle.png').convert_alpha()
 
         draw_text_box(surface, 100, 50, 300, 100, (112, 128, 144))
-        draw_text(surface, 'keeper screen', text_font, (255, 255, 255), 250, 50)
+        draw_text(surface, 'Ruins keeper', text_font, (255, 255, 255), 250, 50)
+
+        frames_for_ghost = loading_frames(sprite_sheet, frame_width, frame_height, frames_in_row)
+        surface.blit(frames_for_ghost[frame_index], (200, 400))
+
+        frame_index += 1
+        if frame_index >= len(frames_for_ghost):
+            frame_index = 0
 
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -620,6 +650,7 @@ def keeper_encounter(surface,images):
                 run = False
 
         pygame.display.update()
+        clock.tick(5)
     pygame.quit()
 
 def win_screen(surface,images):
